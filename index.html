@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>👀みてつくるシート🚗</title>
 <style>
-/* 以前のスタイルを継承 */
+/* 既存のスタイル */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: sans-serif; background: #f0f2f5; color: #333; max-width: 960px; margin: 0 auto; }
 .header { background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; text-align: center; padding: 1.2rem; }
@@ -20,17 +20,22 @@ body { font-family: sans-serif; background: #f0f2f5; color: #333; max-width: 960
 .photo-container { position: relative; background: #000; border-radius: 12px; overflow: hidden; line-height: 0; }
 .step-image { width: 100%; height: auto; cursor: pointer; }
 
-/* アルバム用の追加スタイル */
-.album-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
-.album-item { position: relative; border-radius: 10px; overflow: hidden; background: #eee; aspect-ratio: 1; }
+/* アルバム用のスタイル調整 */
+.album-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+.album-item { position: relative; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+.album-img-wrapper { position: relative; aspect-ratio: 1; overflow: hidden; background: #eee; }
 .album-item img { width: 100%; height: 100%; object-fit: cover; }
-.add-photo-btn { background: #4caf50; color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
-.del-btn { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; }
+.album-info { padding: 8px; font-size: 0.9rem; }
+.album-name { font-weight: bold; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.album-date { font-size: 0.75rem; color: #777; margin-top: 2px; }
 
-/* 拡大オーバーレイ（以前と同じ） */
+.add-photo-btn { background: #4caf50; color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+.del-btn { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 18px; z-index: 10; cursor: pointer; }
+
+/* 拡大オーバーレイ */
 .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000; display: none; align-items: center; justify-content: center; touch-action: none; }
 .overlay.active { display: flex; }
-.overlay-image { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.1s ease-out; }
+.overlay-image { max-width: 100%; max-height: 100%; object-fit: contain; }
 .close-btn { position: fixed; top: 15px; right: 15px; width: 65px; height: 65px; border-radius: 50%; background: white; border: none; font-weight: bold; z-index: 10001; }
 </style>
 </head>
@@ -55,7 +60,7 @@ const steps = [
   { nav: "④ まわる", title: "④ モーター", img1: "images/motor_test.jpg", img2: "", ok: "回れば OK！", note: "注意して見てね。" },
   { nav: "⑤ みため", title: "⑤ 完成イメージ", img1: "images/car_complete.jpg", img2: "images/3ami.gif", ok: "いいかんじ！", note: "向きをかくにん。" },
   { nav: "⑥ かんせい", title: "⑥ やったね！", img1: "images/complete.jpg", img2: "", ok: "大成功！", note: "さあ走らせよう。" },
-  { nav: "📸アルバム", title: "📸 おもいでアルバム", isAlbum: true } // アルバム機能
+  { nav: "📸アルバム", title: "📸 おもいでアルバム", isAlbum: true }
 ];
 
 let currentStep = 0;
@@ -73,12 +78,9 @@ function render() {
   });
 
   const s = steps[currentStep];
-
   if (s.isAlbum) {
-    // アルバム画面の表示
     renderAlbumView(s);
   } else {
-    // 通常の工程画面の表示
     renderStepView(s);
   }
 }
@@ -97,66 +99,71 @@ function renderStepView(s) {
 }
 
 function renderAlbumView(s) {
-  const savedPhotos = JSON.parse(localStorage.getItem('myAlbum') || '[]');
+  let savedPhotos = JSON.parse(localStorage.getItem('myAlbumV2') || '[]');
   
-  let albumHtml = savedPhotos.map((dataUrl, index) => `
+  // 日付順にソート（新しい順）
+  savedPhotos.sort((a, b) => b.timestamp - a.timestamp);
+
+  let albumHtml = savedPhotos.map((item, index) => {
+    const dateStr = new Date(item.timestamp).toLocaleString('ja-JP', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+    return `
     <div class="album-item">
-      <img src="${dataUrl}" onclick="openOverlay('${dataUrl}')">
-      <button class="del-btn" onclick="deletePhoto(${index})">×</button>
+      <button class="del-btn" onclick="deletePhoto(${item.timestamp})">×</button>
+      <div class="album-img-wrapper">
+        <img src="${item.dataUrl}" onclick="openOverlay('${item.dataUrl}')">
+      </div>
+      <div class="album-info">
+        <span class="album-name">${item.name || 'なまえなし'}</span>
+        <span class="album-date">${dateStr}</span>
+      </div>
     </div>
-  `).join('');
+  `}).join('');
 
   content.innerHTML = `
     <div class="step-card">
       <div class="step-title">${s.title}</div>
-      <p style="margin-bottom:15px;">みんなの工作を写真にとってのこせるよ！</p>
+      <p style="margin-bottom:15px;">工作に「なまえ」をつけてのこそう！</p>
       <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="savePhoto(event)">
       <button class="add-photo-btn" onclick="document.getElementById('cameraInput').click()">📷 写真をとる・えらぶ</button>
       <div class="album-grid">${albumHtml}</div>
     </div>`;
 }
 
-// 写真を保存する処理
 function savePhoto(event) {
   const file = event.target.files[0];
   if (!file) return;
 
+  const workName = prompt("工作の「なまえ」を教えてね！", "じぶんの工作");
+  if (workName === null) return; // キャンセルされた場合
+
   const reader = new FileReader();
   reader.onload = function(e) {
-    const savedPhotos = JSON.parse(localStorage.getItem('myAlbum') || '[]');
-    savedPhotos.push(e.target.result); // Base64形式で保存
-    localStorage.setItem('myAlbum', JSON.stringify(savedPhotos));
-    render(); // 再描画
+    const savedPhotos = JSON.parse(localStorage.getItem('myAlbumV2') || '[]');
+    const newItem = {
+      dataUrl: e.target.result,
+      name: workName,
+      timestamp: Date.now() // ソート用の日付データ
+    };
+    savedPhotos.push(newItem);
+    localStorage.setItem('myAlbumV2', JSON.stringify(savedPhotos));
+    render();
   };
   reader.readAsDataURL(file);
 }
 
-// 写真を削除する処理
-function deletePhoto(index) {
+function deletePhoto(timestamp) {
   if (!confirm('この写真をけしてもいいですか？')) return;
-  const savedPhotos = JSON.parse(localStorage.getItem('myAlbum') || '[]');
-  savedPhotos.splice(index, 1);
-  localStorage.setItem('myAlbum', JSON.stringify(savedPhotos));
+  let savedPhotos = JSON.parse(localStorage.getItem('myAlbumV2') || '[]');
+  savedPhotos = savedPhotos.filter(item => item.timestamp !== timestamp);
+  localStorage.setItem('myAlbumV2', JSON.stringify(savedPhotos));
   render();
 }
 
-// --- 拡大・回転制御（以前と同じ） ---
-let scale = 1, posX = 0, posY = 0, pointers = {};
+// --- 拡大制御（基本機能維持） ---
 async function openOverlay(src) {
-  try {
-    if (document.documentElement.requestFullscreen) {
-      await document.documentElement.requestFullscreen();
-      if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape').catch(()=>{});
-    }
-  } catch (err) {}
   const ov = document.createElement('div');
   ov.className = 'overlay'; ov.id = 'imgOverlay';
-  const img = document.createElement('img');
-  img.className = 'overlay-image'; img.src = src;
-  const btn = document.createElement('button');
-  btn.className = 'close-btn'; btn.innerHTML = '×<br>とじる';
-  btn.onclick = closeOverlay;
-  ov.appendChild(img); ov.appendChild(btn);
+  ov.innerHTML = `<img src="${src}" class="overlay-image"><button class="close-btn" onclick="closeOverlay()">×<br>とじる</button>`;
   document.body.appendChild(ov);
   setTimeout(() => ov.classList.add('active'), 10);
   document.body.style.overflow = 'hidden';
@@ -165,14 +172,11 @@ async function openOverlay(src) {
 function closeOverlay() {
   const ov = document.getElementById('imgOverlay');
   if (!ov) return;
-  if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
-  if (document.exitFullscreen && document.fullscreenElement) document.exitFullscreen().catch(()=>{});
   ov.classList.remove('active');
-  setTimeout(() => { if (ov.parentNode) ov.parentNode.removeChild(ov); document.body.style.overflow = ''; }, 300);
+  setTimeout(() => { ov.remove(); document.body.style.overflow = ''; }, 300);
 }
 
 window.addEventListener('DOMContentLoaded', render);
 </script>
 </body>
 </html>
-
