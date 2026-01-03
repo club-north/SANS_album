@@ -109,7 +109,7 @@ function renderAlbumView(s) {
   content.innerHTML = `
     <div class="step-card">
       <div class="step-title">${s.title}</div>
-      <p style="margin-bottom:15px;">じぶんの工作を写真にとってのこせるよ！</p>
+      <p style="margin-bottom:15px;">みんなの工作を写真にとってのこせるよ！</p>
       <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="savePhoto(event)">
       <button class="add-photo-btn" onclick="document.getElementById('cameraInput').click()">📷 写真をとる・えらぶ</button>
       <div class="album-grid">${albumHtml}</div>
