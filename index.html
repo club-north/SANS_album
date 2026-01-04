@@ -1,356 +1,443 @@
-ChatGPT 作成
-
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>👀みてつくるシート🚗</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>👀みてつくるシート🚗</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --accent-color: #FF9800;
+            --danger-color: #f44336;
+            --bg-color: #f8f9fa;
+        }
 
-<style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#f2f2f2;
-  color:#111;
-  line-height:1.6;
-}
-h1{margin:0;font-size:2rem}
-button{font-size:1.2rem}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-header{
-  background:#1565c0;
-  color:#fff;
-  padding:1.2rem;
-  text-align:center;
-}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-color);
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
 
-.nav-wrap{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:#fff;
-  overflow-x:auto;
-  box-shadow:0 2px 6px rgba(0,0,0,.15);
-}
-.nav{
-  display:flex;
-  gap:10px;
-  padding:10px;
-}
-.nav button{
-  min-width:90px;
-  padding:14px;
-  border-radius:14px;
-  border:none;
-  font-weight:700;
-  background:#e3f2fd;
-}
-.nav button.active{
-  background:#ff9800;
-  color:#fff;
-}
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-main{
-  max-width:720px;
-  margin:0 auto;
-  padding:16px;
-}
+        .header h1 { font-size: 1.8rem; margin-bottom: 5px; }
 
-.card{
-  background:#fff;
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
-}
-.card.danger{border:4px solid #d32f2f}
-.card.final{background:#fff9c4;border:4px solid #fbc02d}
+        /* ナビゲーション */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            padding: 12px 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
 
-.title{
-  font-size:1.8rem;
-  font-weight:900;
-  margin-bottom:14px;
-}
+        .nav-scroll { display: flex; gap: 10px; }
 
-.photo{
-  position:relative;
-  margin-bottom:16px;
-  border-radius:14px;
-  overflow:hidden;
-  background:#000;
-  touch-action:manipulation;
-}
-.photo img{
-  width:100%;
-  display:block;
-}
-.photo .label{
-  position:absolute;
-  right:10px;
-  bottom:10px;
-  background:rgba(0,0,0,.7);
-  color:#fff;
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:1rem;
-}
+        .nav-btn {
+            flex: 0 0 auto;
+            padding: 12px 18px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            background: #e3f2fd;
+            color: #1976D2;
+            min-width: 100px;
+            cursor: pointer;
+        }
 
-.box{
-  font-size:1.4rem;
-  padding:14px;
-  border-radius:14px;
-  margin-top:10px;
-}
-.ok{background:#e8f5e9;font-weight:800}
-.note{background:#fff3e0}
+        .nav-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
 
-.album-btn{
-  width:100%;
-  padding:22px;
-  font-size:1.6rem;
-  font-weight:900;
-  border:none;
-  border-radius:18px;
-  background:#4caf50;
-  color:#fff;
-  margin-bottom:20px;
-}
+        /* メインコンテンツ */
+        .main-content {
+            padding: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-.album{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-}
-.album-item{
-  background:#fff;
-  border-radius:16px;
-  overflow:hidden;
-  position:relative;
-}
-.album-item img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.album-info{
-  padding:10px;
-}
-.album-name{
-  font-size:1.2rem;
-  font-weight:900;
-}
-.album-date{
-  font-size:1rem;
-  color:#555;
-}
-.del{
-  position:absolute;
-  top:6px;
-  right:6px;
-  width:44px;
-  height:44px;
-  border:none;
-  border-radius:50%;
-  font-size:1.6rem;
-  background:rgba(0,0,0,.7);
-  color:#fff;
-}
+        .step-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
 
-/* overlay */
-#overlay{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:none;
-  z-index:9999;
-  touch-action:none;
-}
-#overlay img{
-  position:absolute;
-  user-select:none;
-  touch-action:none;
-  will-change:transform;
-}
-#close{
-  position:fixed;
-  top:20px;
-  right:20px;
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  font-size:1.4rem;
-  font-weight:900;
-  border:none;
-  background:#fff;
-  z-index:10000;
-}
-</style>
+        .step-card.danger { border: 4px solid var(--danger-color); }
+        .step-card.final { background: #fffde7; border: 4px solid #fdd835; }
+
+        .step-title {
+            font-size: 1.6rem;
+            color: #1565C0;
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+
+        .photo-area {
+            position: relative;
+            margin-bottom: 15px;
+            background: #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .step-img {
+            width: 100%;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .zoom-label {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
+        .ok-box { background: #e8f5e9; color: #2e7d32; font-weight: bold; }
+        .note-box { background: #fff3e0; color: #e65100; margin-top: 10px; }
+
+        /* アルバム */
+        .add-photo-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .album-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .album-img-wrap {
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .album-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+        .album-info { padding: 10px; }
+        .album-name { display: block; font-weight: bold; font-size: 1.1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .album-date { font-size: 0.8rem; color: #666; }
+
+        .del-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
+            z-index: 5;
+        }
+
+        /* 拡大オーバーレイ */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: none;
+            touch-action: none;
+            overflow: hidden;
+        }
+
+        #overlay-img {
+            position: absolute;
+            user-select: none;
+            will-change: transform;
+        }
+
+        #close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 10000;
+            color: black;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+    </style>
 </head>
-
 <body>
-<header>
-  <h1>👀みてつくるシート🚗</h1>
+
+<header class="header">
+    <h1>👀みてつくるシート🚗</h1>
+    <p>かんたん・たのしい工作アルバム</p>
 </header>
 
-<div class="nav-wrap">
-  <div class="nav" id="nav"></div>
+<div class="nav-container">
+    <div class="nav-scroll" id="navScroll"></div>
 </div>
 
-<main id="main"></main>
+<main class="main-content" id="mainContent"></main>
 
 <div id="overlay">
-  <button id="close">とじる<br>×</button>
-  <img id="zoomImg">
+    <button id="close-btn">とじる<br>×</button>
+    <img id="overlay-img" src="" alt="拡大">
 </div>
 
 <script>
-const steps=[
- { nav:"① でんち", title:"① でんち（BOX）", img1:"images/battery_box.jpg", ok:"電池の向きOK！", note:"＋と－を確認します。" },
- { nav:"② せん", title:"② 電池につける電線", img1:"images/wire_magnet.jpg", ok:"線がつながった！", note:"磁石がしっかり付いているか確認。" },
- { nav:"③ スイッチ", title:"③ 前後切り替えスイッチ", img1:"images/switch_complete.jpg", ok:"前後が切り替わる！", note:"左右SWを押して切り替わるか確認。" },
- { nav:"④ まわる", title:"④ モーターは回る？", img1:"images/motor_test.jpg", ok:"回れば OK", note:"指を近づけないよう注意。" },
- { nav:"⑤ みため", title:"⑤ 見た目完成（実験中）", img1:"images/car_complete.jpg", ok:"つなぎ方をためそう！", note:"前後が逆なら入れ替えてみよう。", danger:true },
- { nav:"⑥ かんせい", title:"⑥ ほんとうの完成！", img1:"images/complete.jpg", ok:"前後に動いたら大成功！", note:"安全に走らせよう。", final:true },
- { nav:"📸アルバム", title:"📸 おもいでアルバム", isAlbum:true }
+const steps = [
+    { nav:"① でんち", title:"① でんち（BOX）", img1:"images/battery_box.jpg", ok:"電池の向きOK！", note:"＋と－を確認します。" },
+    { nav:"② せん", title:"② 電池につける電線", img1:"images/wire_magnet.jpg", ok:"線がつながった！", note:"磁石がしっかり付いているか確認。" },
+    { nav:"③ スイッチ", title:"③ 前後切り替えスイッチ", img1:"images/switch_complete.jpg", ok:"前後が切り替わる！", note:"左右SWを押して切り替わるか確認。" },
+    { nav:"④ まわる", title:"④ モーターは回る？", img1:"images/motor_test.jpg", ok:"回れば OK", note:"指を近づけないよう注意。" },
+    { nav:"⑤ みため", title:"⑤ 見た目完成（実験中）", img1:"images/car_complete.jpg", ok:"つなぎ方をためそう！", note:"前後が逆なら入れ替えてみよう。", danger:true },
+    { nav:"⑥ かんせい", title:"⑥ ほんとうの完成！", img1:"images/complete.jpg", ok:"前後に動いたら大成功！", note:"安全に走らせよう。", final:true },
+    { nav:"📸アルバム", title:"📸 おもいでアルバム", isAlbum:true }
 ];
 
-let current=0;
-const nav=document.getElementById("nav");
-const main=document.getElementById("main");
+let currentStep = 0;
+const navScroll = document.getElementById('navScroll');
+const mainContent = document.getElementById('mainContent');
 
-/* album */
-const KEY="myAlbumV3";
-const getAlbum=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
-const saveAlbum=a=>localStorage.setItem(KEY,JSON.stringify(a));
-
-function render(){
-  nav.innerHTML="";
-  steps.forEach((s,i)=>{
-    const b=document.createElement("button");
-    b.textContent=s.nav;
-    b.className=i===current?"active":"";
-    b.onclick=()=>{current=i;render();scrollTo(0,0)};
-    nav.appendChild(b);
-  });
-  const s=steps[current];
-  s.isAlbum?renderAlbum():renderStep(s);
+// --- アルバム処理 ---
+function getAlbum() { return JSON.parse(localStorage.getItem('myAlbumV3') || '[]'); }
+function saveToAlbum(item) {
+    const album = getAlbum();
+    album.push(item);
+    localStorage.setItem('myAlbumV3', JSON.stringify(album));
 }
-
-function renderStep(s){
-  main.innerHTML=`
-  <div class="card ${s.danger?"danger":""} ${s.final?"final":""}">
-    <div class="title">${s.title}</div>
-    <div class="photo" onclick="openZoom('${s.img1}')">
-      <img src="${s.img1}">
-      <div class="label">タップで拡大</div>
-    </div>
-    <div class="box ok">✅ ${s.ok}</div>
-    <div class="box note">💡 ${s.note}</div>
-  </div>`;
-}
-
-function renderAlbum(){
-  const album=getAlbum().sort((a,b)=>b.ts-a.ts);
-  main.innerHTML=`
-  <div class="card">
-    <div class="title">📸 おもいでアルバム</div>
-    <button class="album-btn" onclick="pick()">📷 写真をとる・えらぶ</button>
-    <input type="file" id="file" accept="image/*" capture="environment" hidden>
-    <div class="album">
-      ${album.map(a=>`
-      <div class="album-item">
-        <button class="del" onclick="del(${a.ts})">×</button>
-        <div class="photo" onclick="openZoom('${a.data}')">
-          <img src="${a.data}">
-        </div>
-        <div class="album-info">
-          <div class="album-name">${a.name}</div>
-          <div class="album-date">${new Date(a.ts).toLocaleString("ja-JP")}</div>
-        </div>
-      </div>`).join("")}
-    </div>
-  </div>`;
-  document.getElementById("file").onchange=load;
-}
-
-function pick(){document.getElementById("file").click()}
-function load(e){
-  const f=e.target.files[0];
-  if(!f)return;
-  const name=prompt("工作のなまえ","じぶんの工作");
-  if(!name)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    const a=getAlbum();
-    a.push({name,data:ev.target.result,ts:Date.now()});
-    saveAlbum(a);
+function deleteFromAlbum(ts) {
+    if(!confirm("この写真を消してもいいですか？")) return;
+    const album = getAlbum().filter(i => i.timestamp !== ts);
+    localStorage.setItem('myAlbumV3', JSON.stringify(album));
     render();
-  };
-  r.readAsDataURL(f);
-}
-function del(ts){
-  if(!confirm("消しますか？"))return;
-  saveAlbum(getAlbum().filter(a=>a.ts!==ts));
-  render();
 }
 
-/* zoom */
-const overlay=document.getElementById("overlay");
-const img=document.getElementById("zoomImg");
-let scale=1,x=0,y=0;
-let pointers={};
+// --- 描画処理 ---
+function render() {
+    navScroll.innerHTML = '';
+    steps.forEach((s, i) => {
+        const btn = document.createElement('button');
+        btn.className = `nav-btn ${i === currentStep ? 'active' : ''}`;
+        btn.textContent = s.nav;
+        btn.onclick = () => { currentStep = i; render(); window.scrollTo(0,0); };
+        navScroll.appendChild(btn);
+    });
 
-function openZoom(src){
-  img.src=src;
-  overlay.style.display="block";
-  scale=1;x=0;y=0;
-  update();
+    const s = steps[currentStep];
+    if (s.isAlbum) {
+        renderAlbum(s);
+    } else {
+        renderStep(s);
+    }
 }
 
-function update(){
-  const mobile=innerHeight>innerWidth;
-  let t=`translate(${x}px,${y}px) scale(${scale})`;
-  if(mobile)t+=" rotate(90deg)";
-  img.style.transform=t;
-  img.style.left="50%";
-  img.style.top="50%";
-  img.style.transformOrigin="center";
+function renderStep(s) {
+    mainContent.innerHTML = `
+        <div class="step-card ${s.danger?'danger':''} ${s.final?'final':''}">
+            <div class="step-title">${s.title}</div>
+            <div class="photo-area" onclick="openZoom('${s.img1}')">
+                <img src="${s.img1}" class="step-img">
+                <div class="zoom-label">🔍 タップで拡大</div>
+            </div>
+            <div class="info-box ok-box">✅ ${s.ok}</div>
+            <div class="info-box note-box">💡 ${s.note}</div>
+        </div>
+    `;
 }
 
-img.addEventListener("pointerdown",e=>e.stopPropagation());
-img.addEventListener("pointermove",e=>e.stopPropagation());
-img.addEventListener("pointerup",e=>e.stopPropagation());
-img.addEventListener("pointercancel",e=>e.stopPropagation());
+function renderAlbum(s) {
+    const album = getAlbum().sort((a,b) => b.timestamp - a.timestamp);
+    let itemsHtml = album.map(item => `
+        <div class="album-item">
+            <button class="del-btn" onclick="deleteFromAlbum(${item.timestamp})">×</button>
+            <div class="album-img-wrap" onclick="openZoom('${item.data}')">
+                <img src="${item.data}">
+            </div>
+            <div class="album-info">
+                <span class="album-name">${item.name}</span>
+                <span class="album-date">${new Date(item.timestamp).toLocaleString('ja-JP')}</span>
+            </div>
+        </div>
+    `).join('');
 
-overlay.addEventListener("pointerdown",e=>{
-  pointers[e.pointerId]=e;
+    mainContent.innerHTML = `
+        <div class="step-card">
+            <div class="step-title">${s.title}</div>
+            <button class="add-photo-btn" onclick="triggerUpload()">📷 写真をとる・えらぶ</button>
+            <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none" onchange="handleFile(event)">
+            <div class="album-grid">${itemsHtml}</div>
+        </div>
+    `;
+}
+
+function triggerUpload() { document.getElementById('fileInput').click(); }
+
+function handleFile(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+    const name = prompt("工作の「なまえ」を教えてね！", "じぶんの工作");
+    if(!name) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        saveToAlbum({ data: ev.target.result, name: name, timestamp: Date.now() });
+        render();
+    };
+    reader.readAsDataURL(file);
+}
+
+// --- 拡大・ズームエンジン ---
+const overlay = document.getElementById('overlay');
+const zoomImg = document.getElementById('overlay-img');
+let scale = 1, translateX = 0, translateY = 0;
+let pointers = {};
+
+function openZoom(src) {
+    zoomImg.src = src;
+    overlay.style.display = 'block';
+    resetZoom();
+    
+    // 初期配置待機
+    setTimeout(() => {
+        const isMobile = window.innerWidth < window.innerHeight;
+        const rect = zoomImg.getBoundingClientRect();
+        // スマホなら回転考慮
+    }, 50);
+}
+
+function resetZoom() {
+    scale = 1; translateX = 0; translateY = 0;
+    updateTransform();
+}
+
+function updateTransform() {
+    const isMobile = window.innerWidth < window.innerHeight;
+    let transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    if (isMobile) {
+        transform += ` rotate(90deg)`;
+        // スマホ横向き表示用にサイズ調整
+        zoomImg.style.width = '100vh';
+        zoomImg.style.height = '100vw';
+    } else {
+        zoomImg.style.width = 'auto';
+        zoomImg.style.height = 'auto';
+        zoomImg.style.maxWidth = '90%';
+        zoomImg.style.maxHeight = '90%';
+    }
+    zoomImg.style.transform = transform;
+    zoomImg.style.left = '50%';
+    zoomImg.style.top = '50%';
+    zoomImg.style.marginLeft = `-${zoomImg.offsetWidth/2}px`;
+    zoomImg.style.marginTop = `-${zoomImg.offsetHeight/2}px`;
+}
+
+function closeZoom() {
+    overlay.style.display = 'none';
+    pointers = {};
+}
+
+// イベント処理
+overlay.addEventListener('pointerdown', (e) => {
+    if(e.target === zoomImg) e.stopPropagation();
+    pointers[e.pointerId] = e;
 });
-overlay.addEventListener("pointermove",e=>{
-  if(!pointers[e.pointerId])return;
-  const prev=pointers[e.pointerId];
-  pointers[e.pointerId]=e;
-  const ps=Object.values(pointers);
-  if(ps.length===2){
-    const [a,b]=ps;
-    const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
-    const pd=Math.hypot(prev.clientX-b.clientX,prev.clientY-b.clientY);
-    scale=Math.min(Math.max(1,scale*d/pd),5);
-  }else if(ps.length===1){
-    if(scale<=1.01)return;
-    x+=e.clientX-prev.clientX;
-    y+=e.clientY-prev.clientY;
-  }
-  update();
-});
-["pointerup","pointercancel"].forEach(ev=>{
-  overlay.addEventListener(ev,e=>delete pointers[e.pointerId]);
-});
-overlay.onclick=e=>{if(e.target===overlay)overlay.style.display="none"};
-document.getElementById("close").onclick=e=>{e.stopPropagation();overlay.style.display="none"};
 
-render();
+overlay.addEventListener('pointermove', (e) => {
+    if (!pointers[e.pointerId]) return;
+    if(e.target === zoomImg) e.stopPropagation();
+
+    const prevPointers = Object.values(pointers);
+    pointers[e.pointerId] = e;
+    const currPointers = Object.values(pointers);
+
+    if (currPointers.length === 2) {
+        // ピンチズーム
+        const p1 = currPointers[0], p2 = currPointers[1];
+        const prev1 = prevPointers.find(p => p.pointerId === p1.pointerId);
+        const prev2 = prevPointers.find(p => p.pointerId === p2.pointerId);
+        if(prev1 && prev2) {
+            const dist1 = Math.hypot(p1.clientX - p2.clientX, p1.clientY - p2.clientY);
+            const dist2 = Math.hypot(prev1.clientX - prev2.clientX, prev1.clientY - prev2.clientY);
+            const delta = dist1 / dist2;
+            scale = Math.min(Math.max(1, scale * delta), 5);
+        }
+    } else if (currPointers.length === 1 && scale > 1.01) {
+        // ドラッグ
+        translateX += e.clientX - prevPointers[0].clientX;
+        translateY += e.clientY - prevPointers[0].clientY;
+    }
+    updateTransform();
+});
+
+const endHandler = (e) => { delete pointers[e.pointerId]; };
+overlay.addEventListener('pointerup', endHandler);
+overlay.addEventListener('pointercancel', endHandler);
+
+document.getElementById('close-btn').onclick = (e) => { e.stopPropagation(); closeZoom(); };
+overlay.onclick = (e) => { if(e.target === overlay) closeZoom(); };
+
+window.onload = render;
+window.onresize = updateTransform;
 </script>
+
 </body>
 </html>
+
+```
