@@ -169,13 +169,13 @@ body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "游ゴシッ�
 </div>
 
 <script>
+// ステップデータ - hasSecondImageを完全に削除、自動判定に
 const steps = [
   { 
     nav: "① でんち", 
     title: "① でんち（BOX）", 
     img1: "images/battery_box.jpg", 
-    img2: "images/battery_box.jpg", 
-    hasSecondImage: true, 
+    img2: "",  // 空なら2枚目なし（自動判定）
     mainAction: "電池の向きを確認してください", 
     detailAction: "プラス（＋）とマイナス（－）の向きをよく確認しましょう",
     emoji: "🔋"
@@ -184,18 +184,16 @@ const steps = [
     nav: "② せん", 
     title: "② 電池につける電線", 
     img1: "images/wire_magnet.jpg", 
-    img2: "images/3ami.gif", 
-    hasSecondImage: false, 
+    img2: "images/wire_zoom.jpg",  // パスがあれば自動で2枚目表示
     mainAction: "電線を電池につなぎましょう", 
-    detailAction: "磁石がしっかり付いているか確認してください",
+    detailAction: "電線の長さ150mm（両端を5mmむく）、電池にしっかりひっつくか確認",
     emoji: "🧲"
   },
   { 
     nav: "③ スイッチ", 
     title: "③ 前後切り替えスイッチ", 
     img1: "images/switch_complete.jpg", 
-    img2: "", 
-    hasSecondImage: true, 
+    img2: "",  // 空なので2枚目なし
     mainAction: "スイッチを取り付けましょう", 
     detailAction: "左右のSWを押して、前後が切り替わるか確認してください",
     emoji: "🔘"
@@ -204,8 +202,7 @@ const steps = [
     nav: "④ まわる", 
     title: "④ モーターは回る？", 
     img1: "images/motor_test.jpg", 
-    img2: "", 
-    hasSecondImage: false, 
+    img2: "",  // 空なので2枚目なし
     mainAction: "モーターが回るかテストしましょう", 
     detailAction: "指を近づけないよう注意しながら回転を確認",
     emoji: "⚙️",
@@ -215,8 +212,7 @@ const steps = [
     nav: "⑤ みため", 
     title: "⑤ 見た目完成（実験中）", 
     img1: "images/car_complete.jpg", 
-    img2: "images/3ami.gif", 
-    hasSecondImage: true, 
+    img2: "images/3ami.gif",  // GIFも自動で表示
     mainAction: "つなぎ方を試してみましょう", 
     detailAction: "前後が逆に動く場合は、線のつなぎ方を入れ替えてみよう",
     emoji: "🚗"
@@ -225,8 +221,7 @@ const steps = [
     nav: "⑥ かんせい", 
     title: "⑥ ほんとうの完成！", 
     img1: "images/complete.jpg", 
-    img2: "", 
-    hasSecondImage: false, 
+    img2: "",  // 空なので2枚目なし
     mainAction: "前後に動いたら大成功！", 
     detailAction: "安全な場所で走らせて、完成を確認しましょう",
     emoji: "🎉",
@@ -243,6 +238,22 @@ let currentStep = 0;
 const navButtons = document.getElementById('navButtons');
 const content = document.getElementById('content');
 const rotationWarning = document.getElementById('rotationWarning');
+
+// 画像が有効かどうかをチェックする関数
+function isValidImagePath(path) {
+  return path && path.trim() !== '';
+}
+
+// 写真要素を作成する関数
+function createPhotoElement(imgSrc, altText) {
+  return `
+    <div class="photo-container" onclick="openOverlay('${imgSrc}')">
+      <img src="${imgSrc}" class="step-image" alt="${altText}" loading="lazy"
+           onerror="console.log('画像読み込みエラー: ${imgSrc}'); this.style.display='none'">
+      <div class="tap-label">タップで拡大</div>
+    </div>
+  `;
+}
 
 function initOrientationLock() {
   window.addEventListener('orientationchange', checkOrientation);
@@ -295,28 +306,28 @@ function render() {
 function renderStepView(s) {
   // 写真HTML生成
   let photoHtml = '';
-  if (s.img1) {
-    photoHtml += `
-      <div class="photo-container" onclick="openOverlay('${s.img1}')">
-        <img src="${s.img1}" class="step-image" alt="${s.title}の写真" loading="lazy">
-        <div class="tap-label">タップで拡大</div>
-      </div>
-    `;
+  let photoCount = 0;
+  
+  // 1枚目の写真（あれば表示）
+  if (isValidImagePath(s.img1)) {
+    photoHtml += createPhotoElement(s.img1, s.title + 'の写真');
+    photoCount++;
   }
   
-  if (s.hasSecondImage && s.img2 && s.img2.trim() !== '') {
-    photoHtml += `
-      <div class="photo-container" onclick="openOverlay('${s.img2}')">
-        <img src="${s.img2}" class="step-image" alt="${s.title}の写真（別角度）" loading="lazy">
-        <div class="tap-label">タップで拡大</div>
-      </div>
-    `;
+  // 2枚目の写真（あれば表示） - 自動判定
+  if (isValidImagePath(s.img2)) {
+    photoHtml += createPhotoElement(s.img2, s.title + 'の写真（詳細）');
+    photoCount++;
   }
-
-  // 写真ヒントメッセージ
+  
+  // 写真ヒントメッセージ（自動生成）
   let photoHint = '';
-  if (!s.hasSecondImage || !s.img2) {
+  if (photoCount === 0) {
+    photoHint = '<div class="photo-hint">この工程の参考写真はありません</div>';
+  } else if (photoCount === 1) {
     photoHint = '<div class="photo-hint">この工程の参考写真は1枚です</div>';
+  } else {
+    photoHint = '<div class="photo-hint">参考写真が' + photoCount + '枚あります</div>';
   }
 
   let actionClass = 'action-section';
@@ -343,7 +354,7 @@ function renderStepView(s) {
           <span class="icon">📸</span>
           <span>作業の参考写真</span>
         </div>
-        <div class="photo-list">${photoHtml}</div>
+        ${photoCount > 0 ? `<div class="photo-list">${photoHtml}</div>` : '<p style="text-align:center; color:#78909c; padding:20px;">写真はありません</p>'}
         ${photoHint}
       </div>
     </div>`;
@@ -600,11 +611,15 @@ window.addEventListener('DOMContentLoaded', () => {
   render();
 });
 
-// エラーハンドリング
-window.addEventListener('error', function(e) {
-  console.error('エラーが発生しました:', e.error);
-  // ユーザー向けのエラーメッセージ（必要に応じて）
-});
+// シンプルな画像管理説明（コンソール用）
+console.log(`
+📸 写真の追加方法：
+1. 画像ファイルを「images/」フォルダに置く
+2. steps配列のimg1やimg2にファイル名を設定
+  例: img1: "images/ファイル名.jpg"
+3. img2を空（""）にすると、写真は1枚だけ表示
+4. img2にファイル名を設定すると、自動で2枚表示
+`);
 </script>
 </body>
 </html>
