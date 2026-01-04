@@ -1,182 +1,356 @@
+ChatGPT 作成
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>👀みてつくるシート🚗</title>
+
 <style>
-/* 既存のスタイル */
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { font-family: sans-serif; background: #f0f2f5; color: #333; max-width: 960px; margin: 0 auto; }
-.header { background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; text-align: center; padding: 1.2rem; }
-.nav-container { width: 100%; overflow-x: auto; background: white; padding: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.nav-scroll { display: inline-flex; gap: 8px; }
-.nav-btn { flex-shrink: 0; padding: 12px 15px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 12px; background: #e1f5fe; color: #0288d1; min-width: 110px; }
-.nav-btn.active { background: #ff9800; color: white; }
-.main-content { padding: 15px; }
-.step-card { background: white; border-radius: 18px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-.step-title { font-size: 1.4rem; color: #1565C0; margin-bottom: 15px; font-weight: bold; }
-.photo-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
-.photo-container { position: relative; background: #000; border-radius: 12px; overflow: hidden; line-height: 0; }
-.step-image { width: 100%; height: auto; cursor: pointer; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f2f2f2;
+  color:#111;
+  line-height:1.6;
+}
+h1{margin:0;font-size:2rem}
+button{font-size:1.2rem}
 
-/* アルバム用のスタイル調整 */
-.album-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-.album-item { position: relative; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-.album-img-wrapper { position: relative; aspect-ratio: 1; overflow: hidden; background: #eee; }
-.album-item img { width: 100%; height: 100%; object-fit: cover; }
-.album-info { padding: 8px; font-size: 0.9rem; }
-.album-name { font-weight: bold; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.album-date { font-size: 0.75rem; color: #777; margin-top: 2px; }
+header{
+  background:#1565c0;
+  color:#fff;
+  padding:1.2rem;
+  text-align:center;
+}
 
-.add-photo-btn { background: #4caf50; color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
-.del-btn { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 18px; z-index: 10; cursor: pointer; }
+.nav-wrap{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#fff;
+  overflow-x:auto;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+.nav{
+  display:flex;
+  gap:10px;
+  padding:10px;
+}
+.nav button{
+  min-width:90px;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  font-weight:700;
+  background:#e3f2fd;
+}
+.nav button.active{
+  background:#ff9800;
+  color:#fff;
+}
 
-/* 拡大オーバーレイ */
-.overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000; display: none; align-items: center; justify-content: center; touch-action: none; }
-.overlay.active { display: flex; }
-.overlay-image { max-width: 100%; max-height: 100%; object-fit: contain; }
-.close-btn { position: fixed; top: 15px; right: 15px; width: 65px; height: 65px; border-radius: 50%; background: white; border: none; font-weight: bold; z-index: 10001; }
+main{
+  max-width:720px;
+  margin:0 auto;
+  padding:16px;
+}
+
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+.card.danger{border:4px solid #d32f2f}
+.card.final{background:#fff9c4;border:4px solid #fbc02d}
+
+.title{
+  font-size:1.8rem;
+  font-weight:900;
+  margin-bottom:14px;
+}
+
+.photo{
+  position:relative;
+  margin-bottom:16px;
+  border-radius:14px;
+  overflow:hidden;
+  background:#000;
+  touch-action:manipulation;
+}
+.photo img{
+  width:100%;
+  display:block;
+}
+.photo .label{
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  background:rgba(0,0,0,.7);
+  color:#fff;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:1rem;
+}
+
+.box{
+  font-size:1.4rem;
+  padding:14px;
+  border-radius:14px;
+  margin-top:10px;
+}
+.ok{background:#e8f5e9;font-weight:800}
+.note{background:#fff3e0}
+
+.album-btn{
+  width:100%;
+  padding:22px;
+  font-size:1.6rem;
+  font-weight:900;
+  border:none;
+  border-radius:18px;
+  background:#4caf50;
+  color:#fff;
+  margin-bottom:20px;
+}
+
+.album{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.album-item{
+  background:#fff;
+  border-radius:16px;
+  overflow:hidden;
+  position:relative;
+}
+.album-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.album-info{
+  padding:10px;
+}
+.album-name{
+  font-size:1.2rem;
+  font-weight:900;
+}
+.album-date{
+  font-size:1rem;
+  color:#555;
+}
+.del{
+  position:absolute;
+  top:6px;
+  right:6px;
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:50%;
+  font-size:1.6rem;
+  background:rgba(0,0,0,.7);
+  color:#fff;
+}
+
+/* overlay */
+#overlay{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:none;
+  z-index:9999;
+  touch-action:none;
+}
+#overlay img{
+  position:absolute;
+  user-select:none;
+  touch-action:none;
+  will-change:transform;
+}
+#close{
+  position:fixed;
+  top:20px;
+  right:20px;
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  font-size:1.4rem;
+  font-weight:900;
+  border:none;
+  background:#fff;
+  z-index:10000;
+}
 </style>
 </head>
-<body>
 
-<header class="header">
+<body>
+<header>
   <h1>👀みてつくるシート🚗</h1>
-  <p>みんなの工作をアルバムにのこそう！</p>
 </header>
 
-<div class="nav-container">
-  <div class="nav-scroll" id="navButtons"></div>
+<div class="nav-wrap">
+  <div class="nav" id="nav"></div>
 </div>
 
-<main class="main-content" id="content"></main>
+<main id="main"></main>
+
+<div id="overlay">
+  <button id="close">とじる<br>×</button>
+  <img id="zoomImg">
+</div>
 
 <script>
-const steps = [
-  { nav: "① でんち", title: "① でんちをいれる", img1: "images/battery_box.jpg", img2: "", ok: "電池の向きOK！", note: "＋と－をよく見ていれよう。" },
-  { nav: "② せん", title: "② せんをつなぐ", img1: "images/wire_magnet.jpg", img2: "images/wire_zoom.jpg", ok: "線がつながった！", note: "磁石がしっかり付いているか確認。" },
-  { nav: "③ スイッチ", title: "③ スイッチ", img1: "images/switch_complete.jpg", img2: "", ok: "切り替わる！", note: "左右のボタンを押してね。" },
-  { nav: "④ まわる", title: "④ モーター", img1: "images/motor_test.jpg", img2: "", ok: "回れば OK！", note: "注意して見てね。" },
-  { nav: "⑤ みため", title: "⑤ 完成イメージ", img1: "images/car_complete.jpg", img2: "images/3ami.gif", ok: "いいかんじ！", note: "向きをかくにん。" },
-  { nav: "⑥ かんせい", title: "⑥ やったね！", img1: "images/complete.jpg", img2: "", ok: "大成功！", note: "さあ走らせよう。" },
-  { nav: "📸アルバム", title: "📸 おもいでアルバム", isAlbum: true }
+const steps=[
+ { nav:"① でんち", title:"① でんち（BOX）", img1:"images/battery_box.jpg", ok:"電池の向きOK！", note:"＋と－を確認します。" },
+ { nav:"② せん", title:"② 電池につける電線", img1:"images/wire_magnet.jpg", ok:"線がつながった！", note:"磁石がしっかり付いているか確認。" },
+ { nav:"③ スイッチ", title:"③ 前後切り替えスイッチ", img1:"images/switch_complete.jpg", ok:"前後が切り替わる！", note:"左右SWを押して切り替わるか確認。" },
+ { nav:"④ まわる", title:"④ モーターは回る？", img1:"images/motor_test.jpg", ok:"回れば OK", note:"指を近づけないよう注意。" },
+ { nav:"⑤ みため", title:"⑤ 見た目完成（実験中）", img1:"images/car_complete.jpg", ok:"つなぎ方をためそう！", note:"前後が逆なら入れ替えてみよう。", danger:true },
+ { nav:"⑥ かんせい", title:"⑥ ほんとうの完成！", img1:"images/complete.jpg", ok:"前後に動いたら大成功！", note:"安全に走らせよう。", final:true },
+ { nav:"📸アルバム", title:"📸 おもいでアルバム", isAlbum:true }
 ];
 
-let currentStep = 0;
-const navButtons = document.getElementById('navButtons');
-const content = document.getElementById('content');
+let current=0;
+const nav=document.getElementById("nav");
+const main=document.getElementById("main");
 
-function render() {
-  navButtons.innerHTML = '';
-  steps.forEach((s, i) => {
-    const b = document.createElement('button');
-    b.className = `nav-btn ${i === currentStep ? 'active' : ''}`;
-    b.textContent = s.nav;
-    b.onclick = () => { currentStep = i; render(); };
-    navButtons.appendChild(b);
+/* album */
+const KEY="myAlbumV3";
+const getAlbum=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
+const saveAlbum=a=>localStorage.setItem(KEY,JSON.stringify(a));
+
+function render(){
+  nav.innerHTML="";
+  steps.forEach((s,i)=>{
+    const b=document.createElement("button");
+    b.textContent=s.nav;
+    b.className=i===current?"active":"";
+    b.onclick=()=>{current=i;render();scrollTo(0,0)};
+    nav.appendChild(b);
   });
-
-  const s = steps[currentStep];
-  if (s.isAlbum) {
-    renderAlbumView(s);
-  } else {
-    renderStepView(s);
-  }
+  const s=steps[current];
+  s.isAlbum?renderAlbum():renderStep(s);
 }
 
-function renderStepView(s) {
-  let photoHtml = `<div class="photo-container" onclick="openOverlay('${s.img1}')"><img src="${s.img1}" class="step-image"></div>`;
-  if (s.img2) photoHtml += `<div class="photo-container" onclick="openOverlay('${s.img2}')"><img src="${s.img2}" class="step-image"></div>`;
-
-  content.innerHTML = `
-    <div class="step-card">
-      <div class="step-title">${s.title}</div>
-      <div class="photo-list">${photoHtml}</div>
-      <div style="background:#e8f5e9; padding:10px; border-radius:10px; margin-bottom:10px;"><b>${s.ok}</b></div>
-      <div style="background:#fff3e0; padding:10px; border-radius:10px;">${s.note}</div>
-    </div>`;
-}
-
-function renderAlbumView(s) {
-  let savedPhotos = JSON.parse(localStorage.getItem('myAlbumV2') || '[]');
-  
-  // 日付順にソート（新しい順）
-  savedPhotos.sort((a, b) => b.timestamp - a.timestamp);
-
-  let albumHtml = savedPhotos.map((item, index) => {
-    const dateStr = new Date(item.timestamp).toLocaleString('ja-JP', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
-    return `
-    <div class="album-item">
-      <button class="del-btn" onclick="deletePhoto(${item.timestamp})">×</button>
-      <div class="album-img-wrapper">
-        <img src="${item.dataUrl}" onclick="openOverlay('${item.dataUrl}')">
-      </div>
-      <div class="album-info">
-        <span class="album-name">${item.name || 'なまえなし'}</span>
-        <span class="album-date">${dateStr}</span>
-      </div>
+function renderStep(s){
+  main.innerHTML=`
+  <div class="card ${s.danger?"danger":""} ${s.final?"final":""}">
+    <div class="title">${s.title}</div>
+    <div class="photo" onclick="openZoom('${s.img1}')">
+      <img src="${s.img1}">
+      <div class="label">タップで拡大</div>
     </div>
-  `}).join('');
-
-  content.innerHTML = `
-    <div class="step-card">
-      <div class="step-title">${s.title}</div>
-      <p style="margin-bottom:15px;">工作に「なまえ」をつけてのこそう！</p>
-      <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="savePhoto(event)">
-      <button class="add-photo-btn" onclick="document.getElementById('cameraInput').click()">📷 写真をとる・えらぶ</button>
-      <div class="album-grid">${albumHtml}</div>
-    </div>`;
+    <div class="box ok">✅ ${s.ok}</div>
+    <div class="box note">💡 ${s.note}</div>
+  </div>`;
 }
 
-function savePhoto(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+function renderAlbum(){
+  const album=getAlbum().sort((a,b)=>b.ts-a.ts);
+  main.innerHTML=`
+  <div class="card">
+    <div class="title">📸 おもいでアルバム</div>
+    <button class="album-btn" onclick="pick()">📷 写真をとる・えらぶ</button>
+    <input type="file" id="file" accept="image/*" capture="environment" hidden>
+    <div class="album">
+      ${album.map(a=>`
+      <div class="album-item">
+        <button class="del" onclick="del(${a.ts})">×</button>
+        <div class="photo" onclick="openZoom('${a.data}')">
+          <img src="${a.data}">
+        </div>
+        <div class="album-info">
+          <div class="album-name">${a.name}</div>
+          <div class="album-date">${new Date(a.ts).toLocaleString("ja-JP")}</div>
+        </div>
+      </div>`).join("")}
+    </div>
+  </div>`;
+  document.getElementById("file").onchange=load;
+}
 
-  const workName = prompt("工作の「なまえ」を教えてね！", "じぶんの工作");
-  if (workName === null) return; // キャンセルされた場合
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const savedPhotos = JSON.parse(localStorage.getItem('myAlbumV2') || '[]');
-    const newItem = {
-      dataUrl: e.target.result,
-      name: workName,
-      timestamp: Date.now() // ソート用の日付データ
-    };
-    savedPhotos.push(newItem);
-    localStorage.setItem('myAlbumV2', JSON.stringify(savedPhotos));
+function pick(){document.getElementById("file").click()}
+function load(e){
+  const f=e.target.files[0];
+  if(!f)return;
+  const name=prompt("工作のなまえ","じぶんの工作");
+  if(!name)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const a=getAlbum();
+    a.push({name,data:ev.target.result,ts:Date.now()});
+    saveAlbum(a);
     render();
   };
-  reader.readAsDataURL(file);
+  r.readAsDataURL(f);
 }
-
-function deletePhoto(timestamp) {
-  if (!confirm('この写真をけしてもいいですか？')) return;
-  let savedPhotos = JSON.parse(localStorage.getItem('myAlbumV2') || '[]');
-  savedPhotos = savedPhotos.filter(item => item.timestamp !== timestamp);
-  localStorage.setItem('myAlbumV2', JSON.stringify(savedPhotos));
+function del(ts){
+  if(!confirm("消しますか？"))return;
+  saveAlbum(getAlbum().filter(a=>a.ts!==ts));
   render();
 }
 
-// --- 拡大制御（基本機能維持） ---
-async function openOverlay(src) {
-  const ov = document.createElement('div');
-  ov.className = 'overlay'; ov.id = 'imgOverlay';
-  ov.innerHTML = `<img src="${src}" class="overlay-image"><button class="close-btn" onclick="closeOverlay()">×<br>とじる</button>`;
-  document.body.appendChild(ov);
-  setTimeout(() => ov.classList.add('active'), 10);
-  document.body.style.overflow = 'hidden';
+/* zoom */
+const overlay=document.getElementById("overlay");
+const img=document.getElementById("zoomImg");
+let scale=1,x=0,y=0;
+let pointers={};
+
+function openZoom(src){
+  img.src=src;
+  overlay.style.display="block";
+  scale=1;x=0;y=0;
+  update();
 }
 
-function closeOverlay() {
-  const ov = document.getElementById('imgOverlay');
-  if (!ov) return;
-  ov.classList.remove('active');
-  setTimeout(() => { ov.remove(); document.body.style.overflow = ''; }, 300);
+function update(){
+  const mobile=innerHeight>innerWidth;
+  let t=`translate(${x}px,${y}px) scale(${scale})`;
+  if(mobile)t+=" rotate(90deg)";
+  img.style.transform=t;
+  img.style.left="50%";
+  img.style.top="50%";
+  img.style.transformOrigin="center";
 }
 
-window.addEventListener('DOMContentLoaded', render);
+img.addEventListener("pointerdown",e=>e.stopPropagation());
+img.addEventListener("pointermove",e=>e.stopPropagation());
+img.addEventListener("pointerup",e=>e.stopPropagation());
+img.addEventListener("pointercancel",e=>e.stopPropagation());
+
+overlay.addEventListener("pointerdown",e=>{
+  pointers[e.pointerId]=e;
+});
+overlay.addEventListener("pointermove",e=>{
+  if(!pointers[e.pointerId])return;
+  const prev=pointers[e.pointerId];
+  pointers[e.pointerId]=e;
+  const ps=Object.values(pointers);
+  if(ps.length===2){
+    const [a,b]=ps;
+    const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+    const pd=Math.hypot(prev.clientX-b.clientX,prev.clientY-b.clientY);
+    scale=Math.min(Math.max(1,scale*d/pd),5);
+  }else if(ps.length===1){
+    if(scale<=1.01)return;
+    x+=e.clientX-prev.clientX;
+    y+=e.clientY-prev.clientY;
+  }
+  update();
+});
+["pointerup","pointercancel"].forEach(ev=>{
+  overlay.addEventListener(ev,e=>delete pointers[e.pointerId]);
+});
+overlay.onclick=e=>{if(e.target===overlay)overlay.style.display="none"};
+document.getElementById("close").onclick=e=>{e.stopPropagation();overlay.style.display="none"};
+
+render();
 </script>
 </body>
 </html>
