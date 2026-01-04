@@ -6,62 +6,152 @@
 <title>👀みてつくるシート🚗</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { font-family: sans-serif; background: #f0f2f5; color: #333; max-width: 960px; margin: 0 auto; min-height: 100vh; }
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "游ゴシック", sans-serif; background: #f5f7fa; color: #333; max-width: 960px; margin: 0 auto; min-height: 100vh; font-size: 16px; line-height: 1.6; }
 
 /* ヘッダー */
-.header { background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; text-align: center; padding: 1.5rem 1rem; }
-.header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-.header p { font-size: 1.2rem; opacity: 0.9; }
+.header { background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; text-align: center; padding: 1rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.header h1 { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.header p { font-size: 0.9rem; opacity: 0.95; }
 
 /* ナビゲーション */
-.nav-container { width: 100%; overflow-x: auto; background: white; padding: 12px 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch; }
-.nav-scroll { display: inline-flex; gap: 10px; min-width: max-content; }
-.nav-btn { flex-shrink: 0; padding: 16px 18px; font-size: 1.3rem; font-weight: bold; border: none; border-radius: 16px; background: #e1f5fe; color: #0288d1; min-width: 130px; min-height: 65px; cursor: pointer; }
-.nav-btn.active { background: #ff9800; color: white; }
+.nav-container { width: 100%; overflow-x: auto; background: white; padding: 8px 5px; border-bottom: 2px solid #e0e0e0; -webkit-overflow-scrolling: touch; }
+.nav-scroll { display: inline-flex; gap: 5px; min-width: max-content; }
+.nav-btn { flex-shrink: 0; padding: 12px 14px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 12px; background: #e8f5e9; color: #2E7D32; min-width: 85px; min-height: 55px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+.nav-btn:hover, .nav-btn:focus { background: #c8e6c9; transform: translateY(-2px); box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+.nav-btn.active { background: #FF9800; color: white; box-shadow: 0 0 0 2px white, 0 0 0 4px #FF9800; }
+.nav-btn:focus { outline: 3px solid #4CAF50; outline-offset: 1px; }
 
 /* メインコンテンツ */
-.main-content { padding: 20px 15px; }
-.step-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
-.step-title { font-size: 1.8rem; color: #1565C0; margin-bottom: 20px; font-weight: bold; }
-.danger-border { border: 4px solid #ff5252; }
-.final-bg { background: #fffde7 !important; }
+.main-content { padding: 15px 10px; }
+.step-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 3px 12px rgba(0,0,0,0.08); margin-bottom: 15px; border: 1px solid #e0e0e0; }
 
-/* 写真表示（縦表示用に調整） */
-.photo-list { display: flex; flex-direction: column; gap: 25px; margin-bottom: 20px; }
-.photo-container { position: relative; background: #000; border-radius: 15px; overflow: hidden; line-height: 0; aspect-ratio: 3/4; max-height: 450px; }
-.step-image { width: 100%; height: 100%; object-fit: contain; cursor: pointer; touch-action: manipulation; }
-.tap-label { position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.7); color: white; padding: 8px 12px; border-radius: 20px; font-size: 0.9rem; pointer-events: none; }
-.photo-caption { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.7); color: white; padding: 6px 10px; border-radius: 10px; font-size: 0.9rem; pointer-events: none; }
+/* ステップタイトル */
+.step-title { font-size: 1.5rem; color: #1565C0; margin-bottom: 20px; font-weight: bold; padding-bottom: 10px; border-bottom: 3px solid #e3f2fd; display: flex; align-items: center; gap: 10px; }
+.step-title::before { content: "📋"; font-size: 1.3rem; }
+
+/* 行動指示セクション - 最重要 */
+.action-section { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 14px; padding: 20px; margin-bottom: 20px; border: 3px solid #4CAF50; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.15); position: relative; }
+.action-section::before { content: "やること"; position: absolute; top: -12px; left: 20px; background: #4CAF50; color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; }
+
+.main-action { font-size: 1.5rem; font-weight: bold; color: #1B5E20; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; line-height: 1.4; }
+.main-action .emoji { font-size: 1.8rem; }
+
+.detail-action { font-size: 1.2rem; color: #333; padding: 15px; background: rgba(255, 255, 255, 0.9); border-radius: 10px; border-left: 5px solid #FF9800; margin-top: 10px; display: flex; align-items: flex-start; gap: 10px; }
+.detail-action .icon { font-size: 1.3rem; flex-shrink: 0; }
+
+.danger-action { background: linear-gradient(135deg, #ffebee, #ffcdd2); border-color: #ff5252; }
+.danger-action::before { content: "注意"; background: #ff5252; }
+
+/* 写真参考セクション - 補助的 */
+.photo-section { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-top: 10px; border: 1px solid #e0e0e0; }
+.photo-title { font-size: 1.1rem; color: #546e7a; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.photo-title .icon { font-size: 1.2rem; }
+
+.photo-list { display: flex; flex-direction: column; gap: 15px; }
+.photo-container { background: white; border-radius: 10px; overflow: hidden; border: 2px solid #e3f2fd; box-shadow: 0 2px 6px rgba(0,0,0,0.05); position: relative; cursor: pointer; transition: transform 0.2s ease; }
+.photo-container:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.step-image { width: 100%; height: auto; max-height: 35vh; object-fit: contain; display: block; }
+.tap-label { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.75); color: white; padding: 6px 10px; border-radius: 15px; font-size: 0.85rem; pointer-events: none; }
+
+.photo-hint { text-align: center; color: #78909c; font-style: italic; font-size: 0.95rem; margin-top: 10px; padding: 8px; background: #f1f8e9; border-radius: 8px; }
 
 /* アルバム */
-.album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; margin-top: 25px; }
-.album-item { position: relative; border-radius: 15px; overflow: hidden; background: white; box-shadow: 0 3px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-.album-img-wrapper { position: relative; aspect-ratio: 1; overflow: hidden; background: #eee; }
-.album-item img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; touch-action: manipulation; }
-.album-info { padding: 12px; }
-.album-name { font-weight: bold; font-size: 1.3rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
-.album-date { font-size: 1rem; color: #777; }
+.album-section { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-top: 20px; border: 2px dashed #bbdefb; }
+.album-section .step-title { border-bottom: none; margin-bottom: 15px; }
 
-.add-photo-btn { background: #4caf50; color: white; border: none; padding: 20px; border-radius: 15px; width: 100%; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 15px; min-height: 70px; }
-.del-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 24px; z-index: 10; cursor: pointer; }
+.album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+.album-item { position: relative; border-radius: 10px; overflow: hidden; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.08); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s ease; border: 1px solid #e0e0e0; }
+.album-item:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.album-img-wrapper { position: relative; aspect-ratio: 1; overflow: hidden; background: #f5f5f5; }
+.album-item img { width: 100%; height: 100%; object-fit: cover; }
+.album-info { padding: 10px; }
+.album-name { font-weight: bold; font-size: 1.1rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; color: #333; }
+.album-date { font-size: 0.85rem; color: #757575; }
+
+.add-photo-btn { background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; border: none; padding: 16px; border-radius: 12px; width: 100%; font-size: 1.3rem; font-weight: bold; cursor: pointer; margin-bottom: 15px; min-height: 65px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s ease; }
+.add-photo-btn:hover, .add-photo-btn:focus { background: linear-gradient(135deg, #3d8b40, #1b5e20); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); }
+.add-photo-btn:focus { outline: 3px solid #2E7D32; outline-offset: 2px; }
+
+.del-btn { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 20px; z-index: 10; cursor: pointer; }
+.del-btn:focus { outline: 2px solid #ff5252; }
 
 /* 拡大オーバーレイ */
-.overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000; display: none; touch-action: none; overflow: hidden; }
+.overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 10000; display: none; touch-action: none; overflow: hidden; }
 .overlay.active { display: block; }
-.overlay-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-.overlay-image { max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: center center; touch-action: none; pointer-events: none; }
-.close-btn { position: fixed; top: 20px; right: 20px; width: 80px; height: 80px; border-radius: 50%; background: white; border: none; font-weight: bold; font-size: 1.8rem; z-index: 10001; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.overlay-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.overlay-image { max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: center center; touch-action: none; pointer-events: none; border: 2px solid white; border-radius: 5px; }
+.close-btn { position: fixed; top: 15px; right: 15px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.95); border: none; font-weight: bold; font-size: 1.8rem; z-index: 10001; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; }
+.close-btn small { font-size: 0.7rem; margin-top: 2px; }
+.close-btn:focus { outline: 3px solid #FF9800; }
 
-/* ステップ内メッセージ */
-.ok-box { background: #e8f5e9; padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 1.4rem; }
-.note-box { background: #fff3e0; padding: 15px; border-radius: 12px; font-size: 1.4rem; }
+/* 回転警告メッセージ */
+.rotation-warning { 
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.95);
+  color: white;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  font-size: 1.3rem;
+}
+.rotation-warning.active { display: flex; }
+
+/* スマホ向け最適化 */
+@media (max-width: 767px) {
+  body { padding-bottom: 20px; }
+  
+  .header { padding: 0.8rem; }
+  .header h1 { font-size: 1.3rem; }
+  .header p { font-size: 0.85rem; }
+  
+  .nav-container { padding: 6px 4px; }
+  .nav-btn { padding: 10px 12px; font-size: 1rem; min-width: 80px; min-height: 50px; border-radius: 10px; }
+  
+  .main-content { padding: 12px 8px; }
+  .step-card { padding: 16px; border-radius: 14px; margin-bottom: 12px; }
+  
+  .step-title { font-size: 1.3rem; margin-bottom: 15px; padding-bottom: 8px; }
+  
+  .action-section { padding: 16px; margin-bottom: 16px; border-radius: 12px; }
+  .main-action { font-size: 1.3rem; gap: 10px; }
+  .detail-action { font-size: 1.1rem; padding: 12px; }
+  
+  .photo-section { padding: 12px; }
+  .step-image { max-height: 40vh; }
+  
+  .album-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+  .add-photo-btn { padding: 14px; font-size: 1.2rem; min-height: 60px; }
+  
+  .close-btn { width: 55px; height: 55px; font-size: 1.6rem; }
+}
+
+/* タブレット・PC向け */
+@media (min-width: 768px) {
+  .header { padding: 1.2rem; }
+  .header h1 { font-size: 1.8rem; }
+  .header p { font-size: 1.1rem; }
+  
+  .step-title { font-size: 1.7rem; }
+  
+  .main-action { font-size: 1.6rem; }
+  
+  .photo-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+  .photo-container { max-height: 300px; }
+}
 </style>
 </head>
 <body>
 
 <header class="header">
   <h1>👀みてつくるシート🚗</h1>
-  <p>みんなの工作をアルバムにのこそう！</p>
+  <p>工作の手順を確認しながら、作った作品をアルバムに残そう！</p>
 </header>
 
 <div class="nav-container">
@@ -70,31 +160,114 @@ body { font-family: sans-serif; background: #f0f2f5; color: #333; max-width: 960
 
 <main class="main-content" id="content"></main>
 
+<div class="rotation-warning" id="rotationWarning">
+  <div>
+    <div style="font-size: 3rem; margin-bottom: 15px;">📱</div>
+    <div>このページは縦向きでご利用ください</div>
+    <div style="margin-top: 15px; font-size: 1rem; color: #ccc;">スマートフォンを縦向きに戻すと<br>正しく表示されます</div>
+  </div>
+</div>
+
 <script>
 const steps = [
-  { nav: "① でんち", title: "① でんち（BOX）", img1: "images/battery_box.jpg", img2: "images/battery_box2.jpg", ok: "電池の向きOK！", note: "＋と－を確認します。" },
-  { nav: "② せん", title: "② 電池につける電線", img1: "images/wire_magnet.jpg", img2: "images/wire_magnet2.jpg", ok: "線がつながった！", note: "磁石がしっかり付いているか確認。" },
-  { nav: "③ スイッチ", title: "③ 前後切り替えスイッチ", img1: "images/switch_complete.jpg", img2: "images/switch_complete2.jpg", ok: "前後が切り替わる！", note: "左右SWを押して切り替わるか確認。" },
-  { nav: "④ まわる", title: "④ モーターは回る？", img1: "images/motor_test.jpg", img2: "images/motor_test2.jpg", ok: "回れば OK", note: "指を近づけないよう注意。" },
-  { nav: "⑤ みため", title: "⑤ 見た目完成（実験中）", img1: "images/car_complete.jpg", img2: "images/car_complete2.jpg", ok: "つなぎ方をためそう！", note: "前後が逆なら入れ替えてみよう。", danger: true },
-  { nav: "⑥ かんせい", title: "⑥ ほんとうの完成！", img1: "images/complete.jpg", img2: "images/complete2.jpg", ok: "前後に動いたら大成功！", note: "安全に走らせよう。", final: true },
-  { nav: "📸アルバム", title: "📸 おもいでアルバム", isAlbum: true }
+  { 
+    nav: "① でんち", 
+    title: "① でんち（BOX）", 
+    img1: "images/battery_box.jpg", 
+    img2: "images/battery_box2.jpg", 
+    hasSecondImage: true, 
+    mainAction: "電池の向きを確認してください", 
+    detailAction: "プラス（＋）とマイナス（－）の向きをよく確認しましょう",
+    emoji: "🔋"
+  },
+  { 
+    nav: "② せん", 
+    title: "② 電池につける電線", 
+    img1: "images/wire_magnet.jpg", 
+    img2: "", 
+    hasSecondImage: false, 
+    mainAction: "電線を電池につなぎましょう", 
+    detailAction: "磁石がしっかり付いているか確認してください",
+    emoji: "🧲"
+  },
+  { 
+    nav: "③ スイッチ", 
+    title: "③ 前後切り替えスイッチ", 
+    img1: "images/switch_complete.jpg", 
+    img2: "images/switch_complete2.jpg", 
+    hasSecondImage: true, 
+    mainAction: "スイッチを取り付けましょう", 
+    detailAction: "左右のSWを押して、前後が切り替わるか確認してください",
+    emoji: "🔘"
+  },
+  { 
+    nav: "④ まわる", 
+    title: "④ モーターは回る？", 
+    img1: "images/motor_test.jpg", 
+    img2: "", 
+    hasSecondImage: false, 
+    mainAction: "モーターが回るかテストしましょう", 
+    detailAction: "指を近づけないよう注意しながら回転を確認",
+    emoji: "⚙️",
+    danger: true
+  },
+  { 
+    nav: "⑤ みため", 
+    title: "⑤ 見た目完成（実験中）", 
+    img1: "images/car_complete.jpg", 
+    img2: "images/car_complete2.jpg", 
+    hasSecondImage: true, 
+    mainAction: "つなぎ方を試してみましょう", 
+    detailAction: "前後が逆に動く場合は、線のつなぎ方を入れ替えてみよう",
+    emoji: "🚗"
+  },
+  { 
+    nav: "⑥ かんせい", 
+    title: "⑥ ほんとうの完成！", 
+    img1: "images/complete.jpg", 
+    img2: "", 
+    hasSecondImage: false, 
+    mainAction: "前後に動いたら大成功！", 
+    detailAction: "安全な場所で走らせて、完成を確認しましょう",
+    emoji: "🎉",
+    final: true
+  },
+  { 
+    nav: "📸アルバム", 
+    title: "📸 作品アルバム", 
+    isAlbum: true 
+  }
 ];
 
 let currentStep = 0;
 const navButtons = document.getElementById('navButtons');
 const content = document.getElementById('content');
+const rotationWarning = document.getElementById('rotationWarning');
 
-// 拡大機能の状態管理
-let scale = 1;
-let translateX = 0;
-let translateY = 0;
-let lastX = 0;
-let lastY = 0;
-let isDragging = false;
-let pointers = {};
-let overlay = null;
-let overlayImg = null;
+function initOrientationLock() {
+  window.addEventListener('orientationchange', checkOrientation);
+  window.addEventListener('resize', checkOrientation);
+  checkOrientation();
+}
+
+function checkOrientation() {
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
+  if (isMobile && !isPortrait) {
+    rotationWarning.classList.add('active');
+  } else {
+    rotationWarning.classList.remove('active');
+  }
+}
+
+function addHapticFeedback(element) {
+  if ('vibrate' in navigator) {
+    element.addEventListener('touchstart', function() {
+      navigator.vibrate(10);
+    });
+  }
+}
 
 function render() {
   navButtons.innerHTML = '';
@@ -102,7 +275,12 @@ function render() {
     const b = document.createElement('button');
     b.className = `nav-btn ${i === currentStep ? 'active' : ''}`;
     b.textContent = s.nav;
-    b.onclick = () => { currentStep = i; render(); };
+    b.onclick = () => { 
+      currentStep = i; 
+      render(); 
+      if ('vibrate' in navigator) navigator.vibrate(20);
+    };
+    addHapticFeedback(b);
     navButtons.appendChild(b);
   });
 
@@ -115,30 +293,65 @@ function render() {
 }
 
 function renderStepView(s) {
-  let photoHtml = `
-    <div class="photo-container" onclick="openOverlay('${s.img1}')">
-      <img src="${s.img1}" class="step-image">
-      <div class="photo-caption">正面から</div>
-      <div class="tap-label">タップで拡大</div>
-    </div>
-    <div class="photo-container" onclick="openOverlay('${s.img2}')">
-      <img src="${s.img2}" class="step-image">
-      <div class="photo-caption">側面から</div>
-      <div class="tap-label">タップで拡大</div>
-    </div>
-  `;
+  // 写真HTML生成
+  let photoHtml = '';
+  if (s.img1) {
+    photoHtml += `
+      <div class="photo-container" onclick="openOverlay('${s.img1}')">
+        <img src="${s.img1}" class="step-image" alt="${s.title}の写真" loading="lazy">
+        <div class="tap-label">タップで拡大</div>
+      </div>
+    `;
+  }
+  
+  if (s.hasSecondImage && s.img2 && s.img2.trim() !== '') {
+    photoHtml += `
+      <div class="photo-container" onclick="openOverlay('${s.img2}')">
+        <img src="${s.img2}" class="step-image" alt="${s.title}の写真（別角度）" loading="lazy">
+        <div class="tap-label">タップで拡大</div>
+      </div>
+    `;
+  }
 
-  let cardClass = 'step-card';
-  if (s.danger) cardClass += ' danger-border';
-  if (s.final) cardClass += ' final-bg';
+  // 写真ヒントメッセージ
+  let photoHint = '';
+  if (!s.hasSecondImage || !s.img2) {
+    photoHint = '<div class="photo-hint">この工程の参考写真は1枚です</div>';
+  }
+
+  let actionClass = 'action-section';
+  if (s.danger) actionClass += ' danger-action';
+  if (s.final) actionClass += ' final-bg';
 
   content.innerHTML = `
-    <div class="${cardClass}">
+    <div class="step-card">
       <div class="step-title">${s.title}</div>
-      <div class="photo-list">${photoHtml}</div>
-      <div class="ok-box"><b>${s.ok}</b></div>
-      <div class="note-box">${s.note}</div>
+      
+      <div class="${actionClass}">
+        <div class="main-action">
+          <span class="emoji">${s.emoji || '✅'}</span>
+          <span class="text">${s.mainAction}</span>
+        </div>
+        <div class="detail-action">
+          <span class="icon">🔍</span>
+          <span class="text">${s.detailAction}</span>
+        </div>
+      </div>
+      
+      <div class="photo-section">
+        <div class="photo-title">
+          <span class="icon">📸</span>
+          <span>作業の参考写真</span>
+        </div>
+        <div class="photo-list">${photoHtml}</div>
+        ${photoHint}
+      </div>
     </div>`;
+    
+  // 写真コンテナに触覚フィードバックを追加
+  document.querySelectorAll('.photo-container').forEach(container => {
+    addHapticFeedback(container);
+  });
 }
 
 function renderAlbumView(s) {
@@ -155,9 +368,9 @@ function renderAlbumView(s) {
     });
     return `
     <div class="album-item">
-      <button class="del-btn" onclick="deletePhoto(${item.timestamp})">×</button>
+      <button class="del-btn" onclick="deletePhoto(${item.timestamp})" aria-label="削除">×</button>
       <div class="album-img-wrapper">
-        <img src="${item.dataUrl}" onclick="openOverlay('${item.dataUrl}')">
+        <img src="${item.dataUrl}" onclick="openOverlay('${item.dataUrl}')" alt="${item.name}の写真" loading="lazy">
       </div>
       <div class="album-info">
         <span class="album-name">${item.name || 'なまえなし'}</span>
@@ -166,21 +379,51 @@ function renderAlbumView(s) {
     </div>
   `}).join('');
 
+  const albumCount = savedPhotos.length;
+  const albumMessage = albumCount > 0 
+    ? `これまでに${albumCount}作品が保存されています`
+    : 'まだ作品が保存されていません。写真を追加しましょう！';
+
   content.innerHTML = `
     <div class="step-card">
       <div class="step-title">${s.title}</div>
-      <p style="margin-bottom:20px; font-size:1.4rem;">工作に「なまえ」をつけてのこそう！</p>
-      <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="savePhoto(event)">
-      <button class="add-photo-btn" onclick="document.getElementById('cameraInput').click()">📷 写真をとる・えらぶ</button>
-      <div class="album-grid">${albumHtml}</div>
+      
+      <div class="action-section">
+        <div class="main-action">
+          <span class="emoji">📷</span>
+          <span class="text">作った作品を写真に残しましょう</span>
+        </div>
+        <div class="detail-action">
+          <span class="icon">💡</span>
+          <span class="text">工作に「なまえ」をつけて記録に残すことができます</span>
+        </div>
+      </div>
+      
+      <div class="album-section">
+        <p style="text-align: center; margin-bottom: 15px; color: #546e7a; font-size: 1.1rem;">
+          ${albumMessage}
+        </p>
+        
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="savePhoto(event)">
+        <button class="add-photo-btn" onclick="document.getElementById('cameraInput').click()">
+          <span>📷</span>
+          <span>写真をとる・えらぶ</span>
+        </button>
+        
+        ${albumCount > 0 ? `<div class="album-grid">${albumHtml}</div>` : ''}
+      </div>
     </div>`;
+    
+  document.querySelectorAll('.album-item, .add-photo-btn').forEach(element => {
+    addHapticFeedback(element);
+  });
 }
 
 function savePhoto(event) {
   const file = event.target.files[0];
   if (!file) return;
 
-  const workName = prompt("工作の「なまえ」を教えてね！", "じぶんの工作");
+  const workName = prompt("工作の「なまえ」を教えてね！\n（例：はじめての電気自動車）", "じぶんの工作");
   if (workName === null) return;
 
   const reader = new FileReader();
@@ -194,21 +437,26 @@ function savePhoto(event) {
     savedPhotos.push(newItem);
     localStorage.setItem('myAlbumV3', JSON.stringify(savedPhotos));
     render();
+    
+    // 成功メッセージ
+    alert(`「${workName}」をアルバムに保存しました！`);
   };
   reader.readAsDataURL(file);
 }
 
 function deletePhoto(timestamp) {
-  if (!confirm('この写真をけしてもいいですか？')) return;
+  if (!confirm('この写真をアルバムから削除してもいいですか？')) return;
   let savedPhotos = JSON.parse(localStorage.getItem('myAlbumV3') || '[]');
   savedPhotos = savedPhotos.filter(item => item.timestamp !== timestamp);
   localStorage.setItem('myAlbumV3', JSON.stringify(savedPhotos));
   render();
 }
 
-// ================= 拡大機能（厳格実装） =================
+// ================= 拡大機能 =================
 function openOverlay(src) {
   if (overlay) return;
+  
+  if ('vibrate' in navigator) navigator.vibrate(20);
 
   overlay = document.createElement('div');
   overlay.className = 'overlay';
@@ -216,11 +464,16 @@ function openOverlay(src) {
     <div class="overlay-content">
       <img src="${src}" class="overlay-image">
     </div>
-    <button class="close-btn" onclick="closeOverlay()">×<br>とじる</button>
+    <button class="close-btn" onclick="closeOverlay()" aria-label="閉じる">
+      ×<br><small>とじる</small>
+    </button>
   `;
 
   document.body.appendChild(overlay);
   overlayImg = overlay.querySelector('.overlay-image');
+  
+  const closeBtn = overlay.querySelector('.close-btn');
+  addHapticFeedback(closeBtn);
 
   setTimeout(() => overlay.classList.add('active'), 10);
   document.body.style.overflow = 'hidden';
@@ -231,6 +484,9 @@ function openOverlay(src) {
 
 function closeOverlay() {
   if (!overlay) return;
+  
+  if ('vibrate' in navigator) navigator.vibrate(10);
+  
   overlay.classList.remove('active');
   setTimeout(() => {
     if (overlay && overlay.parentNode) {
@@ -251,11 +507,6 @@ function initOverlayEvents() {
   overlay.addEventListener('pointerup', handlePointerUp);
   overlay.addEventListener('pointercancel', handlePointerUp);
   overlay.addEventListener('wheel', handleWheel, { passive: false });
-
-  overlayImg.addEventListener('pointerdown', (e) => e.stopPropagation());
-  overlayImg.addEventListener('pointermove', (e) => e.stopPropagation());
-  overlayImg.addEventListener('pointerup', (e) => e.stopPropagation());
-  overlayImg.addEventListener('pointercancel', (e) => e.stopPropagation());
 }
 
 function resetTransform() {
@@ -267,15 +518,16 @@ function resetTransform() {
 
 function updateTransform() {
   if (!overlayImg) return;
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  const isPortrait = window.innerHeight > window.innerWidth;
-
   let transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-  if (isMobile && isPortrait) {
-    transform += ' rotate(90deg)';
-  }
   overlayImg.style.transform = transform;
 }
+
+let scale = 1;
+let translateX = 0;
+let translateY = 0;
+let pointers = {};
+let overlay = null;
+let overlayImg = null;
 
 function handlePointerDown(e) {
   e.stopPropagation();
@@ -335,7 +587,24 @@ function handleWheel(e) {
   updateTransform();
 }
 
-window.addEventListener('DOMContentLoaded', render);
+// キーボード操作サポート
+document.addEventListener('keydown', (e) => {
+  if (overlay && e.key === 'Escape') {
+    closeOverlay();
+  }
+});
+
+// ページ読み込み時の初期化
+window.addEventListener('DOMContentLoaded', () => {
+  initOrientationLock();
+  render();
+});
+
+// エラーハンドリング
+window.addEventListener('error', function(e) {
+  console.error('エラーが発生しました:', e.error);
+  // ユーザー向けのエラーメッセージ（必要に応じて）
+});
 </script>
 </body>
 </html>
